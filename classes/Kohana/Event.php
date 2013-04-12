@@ -1,14 +1,8 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
 /**
- * The 'Event' class allows you to register handlers for named
- * events. It also allows you to invoke ('run') the events on
- * demand. This provides you with a mechanism for sending signals
- * or sharing data between loosely coupled blocks of code. It also
- * allows you to configure 'hooks' within a code base so you can
- * easily extend or override the behaviour of an application.
+ * The 'Event' class allows you to register handlers for named events.
  */
-
 class Kohana_Event {
 
     /**
@@ -269,4 +263,5 @@ class Kohana_Event {
             unset($array[$name]);
         }
     }
-}
+
+} // End Kohana_Event
