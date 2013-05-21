@@ -42,7 +42,7 @@ class Kohana_Event {
      */
     public static function bind($name, $callback, $once = FALSE)
     {
-        self::append($name, $callback, $once);
+        static::append($name, $callback, $once);
     }
 
     /**
@@ -55,8 +55,8 @@ class Kohana_Event {
      */
     public static function rebind($name, $callback, $once = FALSE)
     {
-        self::unbind($name);
-        self::append($name, $callback, $once);
+        static::unbind($name);
+        static::append($name, $callback, $once);
     }
 
     /**
@@ -71,7 +71,7 @@ class Kohana_Event {
      */
     public static function append($name, $callback, $once = FALSE)
     {
-        self::$events[$name][] = array(
+        static::$events[$name][] = array(
             $once ? 'once' : 'always' => $callback
         );
     }
@@ -87,16 +87,16 @@ class Kohana_Event {
      */
     public static function insert($name, $callback, $once = FALSE)
     {
-        if (self::bound($name))
+        if (static::bound($name))
         {
             array_unshift(
-                self::$events[$name],
+                static::$events[$name],
                 array($once ? 'once' : 'always' => $callback)
             );
         }
         else
         {
-            self::append($name, $callback, $once);
+            static::append($name, $callback, $once);
         }
     }
 
@@ -129,11 +129,11 @@ class Kohana_Event {
             $benchmark = Profiler::start( 'Trigger all callback functions for an event ', $name );
         }
 
-        if (self::bound($name))
+        if (static::bound($name))
         {
-            self::$has_run[$name] = TRUE;
+            static::$has_run[$name] = TRUE;
 
-            foreach (self::$events[$name] as $key => $value)
+            foreach (static::$events[$name] as $key => $value)
             {
                 list($type, $callback) = each($value);
 
@@ -142,7 +142,7 @@ class Kohana_Event {
 
                 if ($type == 'once')
                 {
-                    unset(self::$events[$name][$key]);
+                    unset(static::$events[$name][$key]);
                 }
 
                 if ($stop AND !empty($response))
@@ -172,7 +172,7 @@ class Kohana_Event {
      */
     public static function first($name, $data = array())
     {
-        $result = self::run($name, $data);
+        $result = static::run($name, $data);
 
         return reset($result);
     }
@@ -189,7 +189,7 @@ class Kohana_Event {
      */
     public static function until($name, $data = array())
     {
-        $result = self::run($name, $data, TRUE);
+        $result = static::run($name, $data, TRUE);
 
         return end($result);
     }
@@ -202,7 +202,7 @@ class Kohana_Event {
      */
     public static function has_run($name)
     {
-        return isset(self::$has_run[$name]);
+        return isset(static::$has_run[$name]);
     }
 
     /**
@@ -217,7 +217,7 @@ class Kohana_Event {
      */
     public static function unbind($name = NULL)
     {
-        self::clear(self::$events, $name);
+        static::clear(static::$events, $name);
     }
 
     /**
@@ -231,7 +231,7 @@ class Kohana_Event {
      */
     public static function reset($name = NULL)
     {
-        self::clear(self::$has_run, $name);
+        static::clear(static::$has_run, $name);
     }
 
     /**
@@ -242,7 +242,7 @@ class Kohana_Event {
      */
     public static function bound($name)
     {
-        return isset(self::$events[$name]);
+        return isset(static::$events[$name]);
     }
 
     /**
